@@ -28,16 +28,13 @@ function renderFullPage(renderedContent, items) {
 }
 
 export default function render(req, res) {
-  //const text = fs.createReadStream('./big.file');
-  fs.readFile('./big.file', (err, data) => {
-    res.write("<!DOCTYPE html><html><head><title>My Page</title><meta charset='utf-8'></head><body>");
-    res.write("<div id='app'>"); 
-    const stream = renderToNodeStream(<App text={data}/>);
-    stream.pipe(res, { end: false });
-    stream.on('end', () => {
-      res.write("<script type='text/javascript' charset='utf-8' src='/assets/app.js'></script>");
-      res.write("</div></body></html>");
-      res.end();
-    });
+  res.write("<!DOCTYPE html><html><head><title>My Page</title><meta charset='utf-8'></head><body>");
+  res.write("<div id='app'>"); 
+  const stream = renderToNodeStream(<App/>);
+  stream.pipe(res, { end: false });
+  stream.on('end', () => {
+    res.write("<script type='text/javascript' charset='utf-8' src='/assets/app.js'></script>");
+    res.write("</div></body></html>");
+    res.end();
   });
 };
