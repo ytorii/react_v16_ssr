@@ -941,25 +941,19 @@ var _App = __webpack_require__(36);
 
 var _App2 = _interopRequireDefault(_App);
 
-var _fs = __webpack_require__(38);
-
-var _fs2 = _interopRequireDefault(_fs);
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function renderFullPage(renderedContent, items) {
-  const appProps = JSON.stringify(items);
+function renderFullPage(renderedContent) {
   return `
   <!DOCTYPE html>
     <html>
 
     <head>
         <meta charset="utf-8">
-        <title>React Server Rendering sample</title>
+        <title>React SSR v16</title>
     </head>
 
     <body>
-    <script> var APP_PROPS = ${appProps}; </script>
     <div id="app">${renderedContent}</div>
 
     <script type="text/javascript" charset="utf-8" src="/assets/app.js"></script>
@@ -970,13 +964,18 @@ function renderFullPage(renderedContent, items) {
 }
 
 function render(req, res) {
-  res.write("<!DOCTYPE html><html><head><title>My Page</title><meta charset='utf-8'></head><body>");
+  res.write("<!DOCTYPE html><html>");
+  res.write("<head><title>React SSR v16</title><meta charset='utf-8'></head><body>");
   res.write("<div id='app'>");
+  //res.write(renderToString(<App/>));
+
   const stream = (0, _server.renderToNodeStream)(_react2.default.createElement(_App2.default, null));
   stream.pipe(res, { end: false });
   stream.on('end', () => {
+
+    res.write("</div>");
     res.write("<script type='text/javascript' charset='utf-8' src='/assets/app.js'></script>");
-    res.write("</div></body></html>");
+    res.write("</body></html>");
     res.end();
   });
 };
@@ -24401,6 +24400,10 @@ var _LongTextList = __webpack_require__(37);
 
 var _LongTextList2 = _interopRequireDefault(_LongTextList);
 
+var _RecursiveDivs = __webpack_require__(38);
+
+var _RecursiveDivs2 = _interopRequireDefault(_RecursiveDivs);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 class App extends _react.Component {
@@ -24408,8 +24411,8 @@ class App extends _react.Component {
     return [_react2.default.createElement(
       'h1',
       { key: 'header' },
-      'Hello SSR!'
-    ), _react2.default.createElement(_LongTextList2.default, { count: 5000 })];
+      'React SSR v16'
+    ), _react2.default.createElement(_RecursiveDivs2.default, { depth: 4, breadth: 11 })];
   }
 }
 exports.default = App;
@@ -24460,9 +24463,56 @@ module.exports = exports['default'];
 
 /***/ }),
 /* 38 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
-module.exports = require("fs");
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _react = __webpack_require__(2);
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+class RecursiveDivs extends _react2.default.Component {
+  constructor() {
+    super();
+    this.click = this.click.bind(this);
+  }
+
+  render() {
+    const { depth, breadth } = this.props;
+
+    if (depth <= 0) {
+      return _react2.default.createElement(
+        "div",
+        null,
+        "abcdefghij"
+      );
+    }
+    let children = [];
+    for (let i = 0; i < breadth; i++) {
+      children.push(_react2.default.createElement(RecursiveDivs, { key: i, depth: depth - 1, breadth: breadth }));
+    }
+    return _react2.default.createElement(
+      "div",
+      { onClick: this.click },
+      children
+    );
+  }
+
+  click() {
+    alert("clicked!");
+  }
+
+}
+
+exports.default = RecursiveDivs;
+module.exports = exports["default"];
 
 /***/ })
 /******/ ]);

@@ -3,21 +3,18 @@ import ReactDOM from 'react-dom';
 import { renderToString } from 'react-dom/server';
 import { renderToNodeStream } from 'react-dom/server';
 import App from 'App';
-import fs from 'fs';
 
-function renderFullPage(renderedContent, items) {
-  const appProps = JSON.stringify(items);
+function renderFullPage(renderedContent) {
   return `
   <!DOCTYPE html>
     <html>
 
     <head>
         <meta charset="utf-8">
-        <title>React Server Rendering sample</title>
+        <title>React SSR v16</title>
     </head>
 
     <body>
-    <script> var APP_PROPS = ${appProps}; </script>
     <div id="app">${renderedContent}</div>
 
     <script type="text/javascript" charset="utf-8" src="/assets/app.js"></script>
@@ -28,13 +25,21 @@ function renderFullPage(renderedContent, items) {
 }
 
 export default function render(req, res) {
-  res.write("<!DOCTYPE html><html><head><title>My Page</title><meta charset='utf-8'></head><body>");
+  res.write("<!DOCTYPE html><html>");
+  res.write("<head><title>React SSR v16</title><meta charset='utf-8'></head><body>");
   res.write("<div id='app'>"); 
+//res.write(renderToString(<App/>));
+
   const stream = renderToNodeStream(<App/>);
   stream.pipe(res, { end: false });
   stream.on('end', () => {
+
+
+    res.write("</div>");
     res.write("<script type='text/javascript' charset='utf-8' src='/assets/app.js'></script>");
-    res.write("</div></body></html>");
+    res.write("</body></html>");
     res.end();
+
   });
+
 };
