@@ -30,7 +30,9 @@
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
     "rimraf": "^2.5.1",
-    "webpack": "^3.6.0"
+    "webpack": "^3.6.0",
+    "uglify-js": "git://github.com/mishoo/UglifyJS2#harmony-v2.8.22",
+    "uglifyjs-webpack-plugin": "0.4.3"
   },
   "devDependencies": {
     "uglify-js": "git://github.com/mishoo/UglifyJS2#harmony-v2.8.22",

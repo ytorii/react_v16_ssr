@@ -3,4 +3,4 @@ import App from 'App';
 import { hydrate } from "react-dom"
 import { render } from "react-dom"
 
-render(<App/>, document.getElementById('app'))
+hydrate(<App/>, document.getElementById('app'))
