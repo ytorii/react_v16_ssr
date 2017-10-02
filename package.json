@@ -7,6 +7,7 @@
     "clean": "rimraf public",
     "start": "node server/index.js",
     "build:webpack": "webpack --progress --colors",
+    "build:production": "NODE_ENV=production webpack --progress --colors",
     "build": "yarn run clean && yarn run build:webpack",
     "postinstall": "yarn run build"
   },
@@ -30,5 +31,9 @@
     "react-dom": "^16.0.0",
     "rimraf": "^2.5.1",
     "webpack": "^3.6.0"
+  },
+  "devDependencies": {
+    "uglify-js": "git://github.com/mishoo/UglifyJS2#harmony-v2.8.22",
+    "uglifyjs-webpack-plugin": "0.4.3"
   }
 }

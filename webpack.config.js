@@ -1,4 +1,6 @@
 var path = require('path');
+var webpack = require('webpack')
+
 
 var assetsPath = path.join(__dirname, 'public', 'assets');
 var publicPath = 'assets/';
@@ -12,6 +14,18 @@ var commonLoaders = [
     loader: 'json-loader'
   }
 ];
+
+var PRODUCTION = process.env.NODE_ENV === 'production';
+var UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+var production_plugins = PRODUCTION ? [
+    new webpack.DefinePlugin({
+      'process.env': {
+        NODE_ENV: JSON.stringify(process.env.NODE_ENV),
+      },
+    }),
+    new UglifyJsPlugin()
+  ] : []
+
 
 module.exports = [
   {
@@ -35,7 +49,8 @@ module.exports = [
       modules: [
         'app', 'node_modules'
       ]
-    }
+    },
+    plugins: production_plugins
   },{
     name: 'server-side rendering',
     context: path.join(__dirname, 'app'),
